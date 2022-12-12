@@ -13,6 +13,7 @@ blocks=json_file_to_hash($in_file)
 blocks2=json_file_to_hash($in_file2)
 
 
+# Parse blocks metadatas and keep only the ones that contains unique validators_hash, as they were received in order.
 def find_uniq_valsets(blocks)
   uniq = []
   last_block = ""
@@ -31,6 +32,7 @@ def find_uniq_valsets(blocks)
   return uniq
 end
 
+# Find customer validators_hash that never existed on provider
 def find_unmatching_valsets(provider, customer)
   unmatching = []
   customer.each do |customer_block|
@@ -49,6 +51,7 @@ def find_unmatching_valsets(provider, customer)
   return unmatching
 end
 
+# Find customer validators_hash that were received BEFORE provider
 def find_unordered_valsets(provider, customer)
   unordered = []
 
@@ -82,8 +85,11 @@ def find_unordered_valsets(provider, customer)
   return unordered
 end
 
+# Find customer validators_hash that were received "LATE".
+# We can configure what "LATE" means in the `late_seconds` variable inside the function.
 def find_late_sync_valsets(provider, customer)
   late_sync_blocks = []
+  late_seconds = -180
 
   customer.each do |customer_block|
       # Reset the match variable for each customer block
@@ -96,7 +102,7 @@ def find_late_sync_valsets(provider, customer)
 
             # If the difference is positive, consider it is late_sync_blocks
             # Provider should be the first one to get the new set, meaning time_provider - time_customer => Must always be negative
-            if diff <  -180
+            if diff <  late_seconds
               is_late_sync = true
               break
             end

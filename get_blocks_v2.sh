@@ -38,4 +38,3 @@ function get_blocks {
 }
 
 get_blocks $1 $2 $3
-
