@@ -8,7 +8,8 @@
     "block_time": "",
     "validators_hash": "",
     "next_validators_hash": ""
-  }```
+  }
+  ```
 
 2. After creating local *dbs* with each block metas like the one above, we used the function called `find_uniq_valsets` in our **script.rb** to generate a local copy containing only the first blocks that received a new **"validators_hash"**.
 At this point, we have all the blocks, on all chains, that contains only the **validators_hash** changes.
